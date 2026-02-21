@@ -33,6 +33,7 @@ https://www.kaggle.com/datasets/spscientist/students-performance-in-exams
 
 ### ▶️ How to Run
 cd Pass_Fail_Predictor
+
 python main.py
 
 
@@ -64,6 +65,7 @@ https://www.kaggle.com/datasets/shivachandel/kc-house-data
 ### ▶️ How to Run
 
 cd House_Price_Prediction
+
 python main.py
 
 
