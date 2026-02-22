@@ -1,8 +1,7 @@
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LinearRegression
-from sklearn.metrics import r2_score
-
+from sklearn.metrics import mean_absolute_error
 
 class HousePriceModel:
 
@@ -16,7 +15,7 @@ class HousePriceModel:
     def load_data(self):
         self.data = pd.read_csv(self.file_path)
 
-        # Selecting feature columns
+        # Basic features
         self.X = self.data[['sqft_living', 'bedrooms', 'bathrooms']]
         self.y = self.data['price']
 
@@ -25,14 +24,13 @@ class HousePriceModel:
             self.X, self.y, test_size=0.2, random_state=42
         )
 
-        print(f"Training samples: {len(X_train)}")
-        print(f"Testing samples: {len(X_test)}")
-
         self.model.fit(X_train, y_train)
 
         predictions = self.model.predict(X_test)
+        mae = mean_absolute_error(y_test, predictions)
 
-        return r2_score(y_test, predictions)
+        print("Model trained successfully")
+        print("Mean Absolute Error:", mae)
 
     def predict(self, sqft, bedrooms, bathrooms):
         input_data = pd.DataFrame(
@@ -40,4 +38,5 @@ class HousePriceModel:
             columns=['sqft_living', 'bedrooms', 'bathrooms']
         )
 
-        return self.model.predict(input_data)[0]
+        prediction = self.model.predict(input_data)
+        return prediction[0]

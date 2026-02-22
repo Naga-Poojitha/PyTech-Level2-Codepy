@@ -23,9 +23,17 @@ class PassFailModel:
             self.data['writing score']
         ) / 3
 
-        # Create target column
-        self.data['result'] = self.data['average'].apply(
-            lambda x: 1 if x >= 40 else 0
+        # Create target column with proper academic rule
+        self.data['result'] = self.data.apply(
+            lambda row: 1
+            if (
+                row['math score'] >= 35 and
+                row['reading score'] >= 35 and
+                row['writing score'] >= 35 and
+                row['average'] >= 40
+            )
+            else 0,
+            axis=1
         )
 
         # Features and target
@@ -52,10 +60,27 @@ class PassFailModel:
         return accuracy_score(y_test, predictions)
 
     def predict(self, math, reading, writing):
+
+        # Rule-based academic check
+        average = (math + reading + writing) / 3
+
+        if (
+            math < 35 or
+            reading < 35 or
+            writing < 35 or
+            average < 40
+        ):
+            return "Fail"
+
+        # ML prediction
         input_data = pd.DataFrame(
             [[math, reading, writing]],
             columns=['math score', 'reading score', 'writing score']
         )
 
         result = self.model.predict(input_data)
+
         return "Pass" if result[0] == 1 else "Fail"
+
+    def get_trained_model(self):
+        return self.model
